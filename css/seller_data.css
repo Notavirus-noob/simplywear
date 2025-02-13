@@ -1,0 +1,86 @@
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+.body-container {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+/* Header section */
+.header-title, .sub-header-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
+}
+
+/* Table styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+.table-header, .table-cell {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table-header {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.table-cell {
+    color: #555;
+}
+
+/* Status column */
+.table-cell.status {
+    text-transform: capitalize;
+}
+
+/* Action links */
+.action-link {
+    color: #007BFF;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for action links */
+.action-link:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .table-header, .table-cell {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .header-title, .sub-header-title {
+        font-size: 1.8em;
+    }
+}
+
+/* No results found */
+.no-results {
+    text-align: center;
+    color: #999;
+    font-size: 1.2em;
+}

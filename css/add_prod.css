@@ -1,0 +1,114 @@
+
+.container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 90vh;
+	background: linear-gradient(to bottom, #e3e6f3, #a6a6a7, #b1b1b3);
+}
+
+.main{
+	width: 600px;
+	height: 80vh;
+	background: red;
+	overflow: hidden;
+	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px #000;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+h2{
+	color: #000000;
+	font-size: 2em;
+	justify-content: center;
+	display: flex;
+	margin: 20px auto 10px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
+}
+#chk{
+	display: none;
+}
+.signup{
+	position: relative;
+	width:100%;
+	height: 100%;
+}
+label{
+	color: #000;
+	font-size: 2em;
+	justify-content: center;
+	display: flex;
+	margin: 45px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
+}
+input{
+	width: 70%;
+    height: 30px;
+    background: #e0dede;
+    justify-content: center;
+    display: flex;
+    margin: 10px auto;
+    padding: 20px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+button{
+	width: 60%;
+	height: 40px;
+	margin: 10px auto;
+	justify-content: center;
+	display: block;
+	color: #fff;
+	background: #535255;
+	font-size: 1em;
+	font-weight: bold;
+	margin-top: 15px;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	transition: .2s ease-in;
+	cursor: pointer;
+}
+button:hover{
+	background: #088178;
+}
+
+#featured,#New_arrival,#image_div{
+	display: flex;
+	width: 70%;
+	margin: 0 auto;
+	gap: 10px;
+	background-color:#e0dede;
+	cursor: pointer;
+	margin: 10px auto;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+#featured>input,#New_arrival>input{
+	width: 20px;
+	height: 10px;
+	margin:0 5px;
+	vertical-align: middle;
+}
+#image{
+	margin:0 5px;
+	padding: 0;
+	vertical-align: middle;
+}
+#featured>span,#New_arrival>span,#image_div>span{
+	color: #535255;
+}
+#featured>span#fname,#New_arrival>span#na_name{
+	width: 125px;
+}
