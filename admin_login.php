@@ -1,7 +1,14 @@
 <?php 
 	require_once 'functions.php';
-   
 $err = [];
+if(session_status()=== PHP_SESSION_NONE){
+    session_start();
+}
+
+if(isset($_SESSION['seller_id']) || isset($_SESSION['user_id'])){
+    header('location:logout_confirm.php');
+    exit;
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['login'])){
         if (checkRequiredField('email_login')) {

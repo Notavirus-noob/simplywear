@@ -36,12 +36,15 @@ if(isset($_SESSION['admin_id'])) {
             <?php endif; ?>
                 <!-- required by all the users; -->
         <li id="lg-person">
-            <?php if (isset($user) || isset($admin) || isset($seller))  :?>
-            <a href="logout.php" class="<?php echo $current_page == 'logout.php' ? 'active' : ''; ?>"><i class="bi bi-person-dash-fill"></i></a></li>
-            <?php else : ?>
-            <a href="user_signuplogin.php" class="<?php echo $current_page == 'user_signuplogin.php' ? 'active' : ''; ?>"><i class="bi bi-person"></i></a></li>
-            <?php endif; ?>
-            <a href="#" id="close"> <i class="bi bi-x"></i></a>
+        <?php if (isset($user) || isset($admin) || isset($seller))  :?>
+             <a href="logout.php" class="<?php echo $current_page == 'logout.php' ? 'active' : ''; ?>" onclick="return confirm('Are you sure you want to logout?');"><i class="bi bi-person-dash-fill"></i></a>
+        <?php else : ?>
+            <a href="user_signuplogin.php" 
+            class="<?php echo $current_page == 'user_signuplogin.php' ? 'active' : ''; ?>">
+            <i class="bi bi-person"></i>
+            </a>
+        <?php endif; ?>
+        <a href="#" id="close"> <i class="bi bi-x"></i></a>
     </ul>              
 </div>
 <div id="mobile">

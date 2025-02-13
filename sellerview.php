@@ -10,7 +10,7 @@ if(!isset($_SESSION['seller_id'])) {
   }
 $err=[];
 if (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
-    if (getProductById($_GET['delid'],$_SESSION['seller_id'])) {
+    if (getProductById($_GET['delid'])) {
         if(deleteProduct($_GET['delid'])){
             $err['prod_s'] =  'Product deleted success';
         } else {
@@ -20,7 +20,8 @@ if (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
         $err['prod_f'] = 'product not found';
     }
 }
-$products=getAllProducts();
+
+$products=getProductsBySellerId($_SESSION['seller_id']);
 
 ?>
 <!DOCTYPE html>
@@ -53,17 +54,21 @@ $products=getAllProducts();
             </thead>
             <tbody>
                 <?php $cartsubtotal=0; ?>
-                <?php if (isset($products)): ?>
+                <?php if (isset($products) && is_array($products) && !empty($products)): ?>
                     <?php foreach ($products as $index => $product) { ?> 
                         <tr>
                             <td><a href="sellerview.php?delid=<?php echo $product['prod_id']?>"><i class="bi bi-x-circle"></i></a></td>
                             <td><a href="editProduct.php?edtid=<?php echo $product['prod_id']?>"><i class="bi bi-pencil-fill"></i></a></td>
-                            <td><img src="img/products/<?php echo $product['image']?>" alt="<?php $product['prodname'] ?>"></td>
+                            <td><img src="img/products/<?php echo $product['image']?>" alt="<?php echo $product['prodname'] ?>"></td>
                             <td><?php echo $product['prodname'] ?></td>
                             <td><?php echo $product['price'] ?></td>
                             <td><?php echo $product['quantity'] ?></td>
                         </tr>
                     <?php } ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6">No products available.</td>
+                    </tr>
                 <?php endif; ?>
             </tbody>
         </table>

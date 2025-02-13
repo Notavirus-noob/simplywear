@@ -4,8 +4,8 @@ require 'functions.php';
 if(session_status()==PHP_SESSION_NONE){
     session_start();
 }
-if(isset($_SESSION['seller_id'])){
-    header('location:sellerdashboard.php?error=Access Denied');
+if(isset($_SESSION['seller_id']) || isset($_SESSION['admin_id'])){
+    header('location:logout_confirm.php');
 }
 
 if (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
@@ -29,7 +29,7 @@ if(isset($_SESSION['user_id'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce</title>
+    <title>SimplyWear</title>
     <link rel="stylesheet" href="css/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css?v=<?php echo time(); ?>">
 </head>

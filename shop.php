@@ -7,7 +7,7 @@ $products = getAllProducts();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce</title>
+    <title>SimplyWear</title>
     <link rel="stylesheet" href="css/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css?v=<?php echo time(); ?>">
 </head>
@@ -35,7 +35,7 @@ $products = getAllProducts();
                                 <i class="bi bi-star-half"></i>
                                 <i class="bi bi-star"></i>
                             </div>
-                            <h4>&dollar;<?php echo $product['price'] ?></h4>
+                            <h4>NPR:<?php echo $product['price'] ?></h4>
                         </div>
                         <a href="sproduct.php?id=<?php echo $product['prod_id'] ?>"><i class="bi bi-cart cart"></i></a>
                     </div>

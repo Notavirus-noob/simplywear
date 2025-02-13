@@ -1,10 +1,15 @@
 <?php
 require('functions.php');  
-session_start();
+
+if(session_status()=== PHP_SESSION_NONE){
+    session_start();
+}
+
 if(!isset($_SESSION['admin_id'])){
     header('location:admin_login.php');
+    exit;
 }
-if(isset($_SESSION['admin_id'])==2){
+if(isset($_SESSION['admin_id'])==2 ){
     echo '<script>alert("Welcome My Master");</script>';
 }
 $getCount = getCount();

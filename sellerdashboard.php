@@ -1,11 +1,14 @@
 <?php 
+
 	require_once 'functions.php';
     if(session_status()=== PHP_SESSION_NONE){
         session_start();
     }
+
   if(!isset($_SESSION['seller_id'])) {
     header('location:seller_signuplogin.php');
   }
+  print_r($_SESSION);
     $err = [];
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (checkRequiredField('product_name')) {

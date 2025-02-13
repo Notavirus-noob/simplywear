@@ -1,5 +1,12 @@
 <?php 
 	require_once 'functions.php';
+    if(session_status()=== PHP_SESSION_NONE){
+        session_start();
+    }
+    if(isset($_SESSION['seller_id']) || isset($_SESSION['admin_id'])){
+        header('location:logout_confirm.php');
+        exit;
+    }
     $err = [];
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       
@@ -57,14 +64,30 @@
         }
 
 
-        if(count($err) == 0){
-            if (addUser($username,$email,$mobile_no,$pwd)) {
-                $err['success'] = 'User detail add success now click below';   
-            } else {
-            $err['failed'] = 'User detail add Failed';
+        if (count($err) == 0) {
+            try {
+                // Attempt to add the user details to the database
+                $result = addUser($username, $email, $mobile_no, $pwd);
+        
+                if ($result === true) {
+                    // Success message
+                    $err['success'] = 'User added successfully! Click below to proceed.';
+                } elseif ($result === "username") {
+                    $err['failed'] = 'This username is already taken. Please choose another one.';
+                } elseif ($result === "email") {
+                    $err['failed'] = 'This email is already registered. Try logging in instead.';
+                } elseif ($result === "mobile") {
+                    $err['failed'] = 'This mobile number is already in use. Use a different number.';
+                } else {
+                    // General failure message for unknown reasons
+                    $err['failed'] = 'User addition failed. Please try again later.';
+                }
+            } catch (mysqli_sql_exception $ex) {
+                // Handle database-related errors
+                $err['failed'] = 'User addition failed due to a database error.';
             }
-            
-        }  
+        }
+        
     }
     else if(isset($_POST['login'])){
         if (checkRequiredField('email_login')) {

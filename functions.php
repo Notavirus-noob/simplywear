@@ -27,42 +27,56 @@
         return false;
     }
 
-    function addUser($username,$email,$mobile_no,$pwd){
-        try{
-            $connection = mysqli_connect('localhost','root','','bridge_courier');
-            $insertsql = "INSERT INTO user_credentials(username, email,mobile, password) VALUES('$username', '$email' ,$mobile_no, '$pwd')";
-            mysqli_query($connection,$insertsql);
-        if ($connection->insert_id > 0 && $connection->affected_rows == 1) {
-            return true;
-        } else {
-            return false;
-
-        }
-        }catch(Exception $ex){
-            if (str_contains($ex->getMessage(), "Duplicate entry") && str_contains($ex->getMessage(), "for key 'username'")) {
-                echo "Error: The username '{$username}' already exists.";
+    function addUser($username, $email, $mobile_no, $pwd) {
+        try {
+            // Enable error reporting for MySQLi
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    
+            // Connect to the database
+            $connection = new mysqli('localhost', 'root', '', 'bridge_courier');
+    
+            // Escape user input to prevent SQL Injection
+            $username = $connection->real_escape_string($username);
+            $email = $connection->real_escape_string($email);
+            $mobile_no = $connection->real_escape_string($mobile_no);
+    
+            // Construct the SQL query
+            $insertsql = "INSERT INTO user_credentials (username, email, mobile, password) 
+                          VALUES ('$username', '$email', '$mobile_no', '$pwd')";
+    
+            // Execute the query
+            if ($connection->query($insertsql) === TRUE) {
+                $connection->close();
+                return true;
+            } else {
+                $connection->close();
+                return false;
             }
-            elseif(str_contains($ex->getMessage(), "Duplicate entry") && str_contains($ex->getMessage(), "for key 'email'")) {
-                echo "Error: The email '{$email}' already exists.";
-            } 
-            elseif(str_contains($ex->getMessage(), "Duplicate entry") && str_contains($ex->getMessage(), "for key 'mobile'")) {
-                echo "Error: The mobile no '{$mobile_no}' already exists.";
-            } 
-            else {
-        echo "Database error: " . $ex->getMessage();
-    }
+        } catch (mysqli_sql_exception $ex) {
+            // Handle duplicate entry errors
+            if (strpos($ex->getMessage(), "Duplicate entry") !== false) {
+                if (strpos($ex->getMessage(), "for key 'username'") !== false) {
+                    return "username";
+                } elseif (strpos($ex->getMessage(), "for key 'email'") !== false) {
+                    return "email";
+                } elseif (strpos($ex->getMessage(), "for key 'mobile'") !== false) {
+                    return "mobile";
+                }
+            }
+            return "Database error: " . $ex->getMessage();
         }
     }
+    
     function addSeller($username,$address,$email,$mobile_no,$pwd){
         try{
             $connection = mysqli_connect('localhost','root','','bridge_courier');
             $insertsql = "INSERT INTO seller_credentials(username,address, email,phone_number, password) VALUES('$username','$address', '$email' ,$mobile_no, '$pwd')";
             mysqli_query($connection,$insertsql);
-        if ($connection->insert_id > 0 && $connection->affected_rows == 1) {
-            return true;
-        } else {
-            return false;
-        }
+            if ($connection->insert_id > 0 && $connection->affected_rows == 1) {
+                return true;
+            } else {
+                return false;
+            }
         }catch(Exception $ex){
             if (str_contains($ex->getMessage(), "Duplicate entry") && str_contains($ex->getMessage(), "for key 'username'")) {
                 echo "Error: The username '{$username}' already exists.";
@@ -74,8 +88,8 @@
                 echo "Error: The mobile no '{$mobile_no}' already exists.";
             } 
             else {
-        echo "Database error: " . $ex->getMessage();
-    }
+                echo "Database error: " . $ex->getMessage();
+            }
         }
     }
     function addProduct($product_name,$proddesc,$price,$quantity,$image,$f_stat,$na_stat){
@@ -99,9 +113,6 @@
     }
     function addToCart($product_name, $price, $size, $quantity,$image) {
         try {
-            if(session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $connection = mysqli_connect('localhost', 'root', '', 'bridge_courier');          
             $user_id = $_SESSION['user_id'];
             $insertsql = "INSERT INTO cart(product_name, price, size, quantity, user_id,image) VALUES(?, ?, ?, ?, ?,?)";
@@ -214,10 +225,10 @@
     }
     
     
-    function getProductById($id,$seller_id){
+    function getProductById($id){
         try {
             $connect = new mysqli( 'localhost','root','','bridge_courier');
-            $sql = "select * from productdetails where prod_id=$id,created_by=$seller_id or modified_by=$seller_id";
+            $sql = "select * from productdetails where prod_id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
                 $recordById= $result->fetch_assoc();
@@ -228,6 +239,35 @@
            die('Error: ' . $th->getMessage());
         }
     }
+    function getProductsBySellerId($seller_id){
+        try {
+            // Connect to the database
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+            
+            // SQL query to fetch products created or modified by the seller
+            $sql = "SELECT * FROM productdetails WHERE created_by = $seller_id OR modified_by = $seller_id";
+            
+            // Execute the query
+            $result = $connect->query($sql);
+    
+            // Check if there are any products
+            if ($result->num_rows > 0) {
+                $products = [];
+                // Fetch all rows as an associative array
+                while ($row = $result->fetch_assoc()) {
+                    $products[] = $row;
+                }
+                return $products; // Return all products
+            } else {
+                return false; // No products found
+            }
+    
+        } catch (\Throwable $th) {
+            // Handle any errors
+            die('Error: ' . $th->getMessage());
+        }
+    }
+    
     function getCartById($id){
         try {
             $connect = new mysqli( 'localhost','root','','bridge_courier');

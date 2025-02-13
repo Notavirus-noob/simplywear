@@ -1,5 +1,5 @@
 <?php require "functions.php"; 
-    if(session_status()==PHP_SESSION_NONE){
+    if(session_status()== PHP_SESSION_NONE){
         session_start();
     }
     if(isset($_SESSION['seller_id'])) {
@@ -26,13 +26,16 @@
         $quantity = $_POST['quantity'];
         $image = $_POST['image'];
         if(count($err) == 0){ 
-
-           if (addToCart($product_name, $price, $size, $quantity, $image)) {
-                $err['success'] = 'Added to Cart';   
+            if(isset($_SESSION['user_id'])) {
+                if (addToCart($product_name, $price, $size, $quantity, $image)) {
+                     $err['success'] = 'Added to Cart';   
+                 } else {
+                 $err['failed'] = 'Failed to add to Cart';
+                }    
             } else {
-            $err['failed'] = 'Failed to add to Cart';
+                $err['failed'] = 'Please Login to add to Cart';
+                
             }
-            
         }  
     }
    
@@ -44,7 +47,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce</title>
+    <title>SimplyWear</title>
     <link rel="stylesheet" href="css/main.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css?v=<?php echo time(); ?>">
 </head>

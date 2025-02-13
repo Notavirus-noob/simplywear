@@ -7,7 +7,7 @@ $products = getAllProducts();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BridgeCourier.</title>
+    <title>SimplyWear.</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="css/main.css?v=<?php echo time(); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css?v=<?php echo time(); ?>" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -81,7 +81,7 @@ $products = getAllProducts();
 
     <section id="product1" class="section_p1">
         <h2>New Arrivals</h2>
-        <p>Summer Collection New Morder Design</p>
+        <p>Summer Collection New Mordern Design</p>
         <div class="pro-container">
         <?php foreach ($products as $key => $product) { ?>
                 <?php if($product['na_stat'] == 1) { ?>
