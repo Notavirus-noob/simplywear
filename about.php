@@ -22,7 +22,7 @@
         <img src="img/about/a6.jpg" alt="">
         <div>
             <h2>Who We Are?</h2>
-            <p>Bridge Courier is a logistics and delivery company dedicated to providing fast, reliable, and secure courier services. Specializing in seamless transportation solutions, Bridge Courier offers a range of options, from same-day delivery to international shipping, ensuring that packages reach their destinations safely and on time. Committed to exceptional customer service, the company provides easy tracking, flexible pickup and drop-off options, and transparent pricing. Bridge Courier’s mission is to bridge the gap between businesses and customers by connecting people, places, and products efficiently across distances.</p>
+            <p>SimplyWear. is a logistics and delivery company dedicated to providing fast, reliable, and secure courier services. Specializing in seamless transportation solutions, Bridge Courier offers a range of options, from same-day delivery to international shipping, ensuring that packages reach their destinations safely and on time. Committed to exceptional customer service, the company provides easy tracking, flexible pickup and drop-off options, and transparent pricing. Bridge Courier’s mission is to bridge the gap between businesses and customers by connecting people, places, and products efficiently across distances.</p>
             <br/>
             <marquee bgcolor="#ccc" loop="-1" scrollamount="5" width="100%">"At Bridge Courier, we go the extra mile to deliver not just packages but peace of mind, connecting you to what matters most with speed, security, and reliability."</marquee>
         </div>

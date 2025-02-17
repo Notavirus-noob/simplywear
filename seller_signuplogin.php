@@ -1,5 +1,12 @@
 <?php 
-	require_once 'functions.php';
+require_once 'functions.php';
+if(session_status()=== PHP_SESSION_NONE){
+    session_start();
+}
+if(isset($_SESSION['admin_id']) || isset($_SESSION['user_id'])){
+    header('location:logout_confirm.php');
+    exit;
+}
 $err = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['signup'])) {

@@ -52,10 +52,25 @@ $getCount = getCount();
                 <p><?php echo $getCount['activeSellerCount'] ?></p>
             </div>
         </div>
+        <div class="stats">
+        <div class="stat-box">
+                <h3>Pending Orders</h3>
+                <p><?php echo $getCount['pendingCartCount'] ?></p>
+            </div>
+            <div class="stat-box">
+                <h3>Approved Orders</h3>
+                <p><?php echo $getCount['approvedCartCount'] ?></p>
+            </div>
+            <div class="stat-box">
+                <h3>Rejected Orders</h3>
+                <p><?php echo $getCount['rejectedCartCount'] ?></p>
+            </div>
+        </div>
 
         <div class="buttons">
             <a href="view_users.php" class="btn">View User Data</a>
             <a href="view_sellers.php" class="btn">View Seller Data</a>
+            <a href="view_order.php" class="btn">View Order Data</a>
         </div>
     </div>
     <?php require "footer.php"; ?>

@@ -337,27 +337,42 @@
 
     function getCount(){
         try {
-            $connect = new mysqli('localhost','root','','bridge_courier');
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+            
+            // Queries for user, seller, and cart counts
             $userQuery = "SELECT COUNT(*) as count FROM user_credentials";
             $sellerQuery = "SELECT COUNT(*) as count FROM seller_credentials";
             $pendingSellerQuery = "SELECT COUNT(*) as count FROM seller_credentials WHERE status = 'pending'";
             $activeSellerQuery = "SELECT COUNT(*) as count FROM seller_credentials WHERE status = 'active'";
-
+    
+            // Query to get cart count for unique user_id
+            $pendingCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='pending'";
+            $approvedCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='approved'";
+            $rejectedCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='rejected'";;
+    
+            // Execute all queries
             $userCount = $connect->query($userQuery)->fetch_assoc()['count'];
             $sellerCount = $connect->query($sellerQuery)->fetch_assoc()['count'];
             $pendingSellerCount = $connect->query($pendingSellerQuery)->fetch_assoc()['count'];
             $activeSellerCount = $connect->query($activeSellerQuery)->fetch_assoc()['count'];
-
+            $PendingCartCount = $connect->query($pendingCartQuery)->fetch_assoc()['count'];
+            $approvedCartCount = $connect->query($approvedCartQuery)->fetch_assoc()['count'];
+            $rejectedCartCount = $connect->query($rejectedCartQuery)->fetch_assoc()['count'];
+    
             return [
                 'userCount' => $userCount,
                 'sellerCount' => $sellerCount,
                 'activeSellerCount' => $activeSellerCount,
-                'pendingSellerCount' => $pendingSellerCount
+                'pendingSellerCount' => $pendingSellerCount,
+                'pendingCartCount' => $PendingCartCount,
+                'approvedCartCount' => $approvedCartCount,
+                'rejectedCartCount' => $rejectedCartCount,
             ];
         } catch (\Throwable $th) {
-           die('Error: ' . $th->getMessage());
+            die('Error: ' . $th->getMessage());
         }
     }
+    
   
     function getSellers(){
         try {
@@ -381,6 +396,23 @@
         try {
             $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from user_credentials";
+            $result = $connect->query($sql);
+            $users = [];
+            if ($result->num_rows > 0) {
+                //fetch products
+                while ($record= $result->fetch_assoc()) {
+                    array_push($users,$record);
+                }
+            }
+            return $users;
+        } catch (\Throwable $th) {
+           die('Error: ' . $th->getMessage());
+        }
+    }
+    function getOrders(){
+        try {
+            $connect = new mysqli('localhost','root','','bridge_courier');
+            $sql = "select * from cart";
             $result = $connect->query($sql);
             $users = [];
             if ($result->num_rows > 0) {
@@ -479,7 +511,47 @@
             }
             return $cart;
         } catch (\Throwable $th) {
-           die('Error: ' . $th->getMessage());
+            die('Error: ' . $th->getMessage());
         }
     }
-?>
+    function updateUserAddress($userAddress,$id){
+        try {
+            $connect = new mysqli('localhost','root','','bridge_courier');
+            $sql = "UPDATE user_credentials SET address='$userAddress' WHERE id=$id";
+            $connect->query($sql);
+            if ($connect->affected_rows == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            die('Error: ' . $th->getMessage());
+        }
+    }
+    
+    function getAddressByUserId($id){
+        try {
+            $connect = new mysqli('localhost','root','','bridge_courier');
+    
+            if ($connect->connect_error) {
+                throw new Exception('Connection failed: ' . $connect->connect_error);
+            }
+    
+            $sql = "SELECT address FROM user_credentials WHERE id = $id";
+            $result = $connect->query($sql);
+    
+            if ($result->num_rows == 1) {
+                $record = $result->fetch_assoc();
+                return $record['address'];  // Return only the address
+            }
+    
+            return false;  // If no address found
+    
+        } catch (\Throwable $th) {
+            // Log error instead of die()
+            error_log('Error: ' . $th->getMessage());
+            return false;
+        }
+    }
+    
+    ?>

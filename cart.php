@@ -1,12 +1,30 @@
 
 <?php 
-require 'functions.php'; 
-if(session_status()==PHP_SESSION_NONE){
+require 'functions.php';
+
+if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-if(isset($_SESSION['seller_id']) || isset($_SESSION['admin_id'])){
-    header('location:logout_confirm.php');
+
+// If session is not empty
+if (!empty($_SESSION)) {
+    // If 'user_id' is not set, but 'seller_id' or 'admin_id' exists, log them out
+    if (isset($_SESSION['seller_id']) || isset($_SESSION['admin_id'])) {
+        session_unset();
+        session_destroy();
+        header('Location: user_signuplogin.php');
+        exit;
+    }
+
+    // If no valid user session exists, redirect to login
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: user_signuplogin.php');
+        exit;
+    }
 }
+
+// If the session is empty, do nothing (stay on the same page)
+
 
 if (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
     if (getCartById($_GET['delid'])) {
@@ -102,10 +120,11 @@ if(isset($_SESSION['user_id'])){
                     
                 </tr>
             </table>
-            <?php if (isset($user)): ?>
-            <a href="checkout.php?user_id=<?php $user ?>"> <button class="normal">Procced to Checkout</button></a>
+            <?php 
+            if (isset($user['id'])): ?>
+            <a href="address.php?user_id=<?php echo $user['id'] ?>"> <button class="normal">Place Order</button></a>
             <?php else: ?>
-                <a href="#" onclick="alert('Login First!!')"> <button class="normal">Procced to Checkout</button></a>
+                <a href="#" onclick="alert('Login First!!')"> <button class="normal">Place Order</button></a>
             <?php endif; ?>
            
         </div>
