@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2025 at 04:40 AM
+-- Generation Time: Feb 20, 2025 at 04:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -72,6 +72,36 @@ INSERT INTO `cart` (`id`, `product_name`, `price`, `size`, `quantity`, `order_st
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
+  `status` enum('pending','shipped','completed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `prod_id` int(11) DEFAULT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `size` varchar(50) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `productdetails`
 --
 
@@ -98,6 +128,24 @@ INSERT INTO `productdetails` (`prod_id`, `prodname`, `prod_desc`, `image`, `pric
 (18, 'Pant', 'Size S, M, L, XL', 'f7.jpg', 1200.00, 400, 1, 1, 4, '2024-12-12 13:41:39', 4, '2024-12-19 12:24:46'),
 (19, 'Flower T-shirt', 'Size S, M, L, XL', 'f3.jpg', 1000.00, 500, 1, 1, 4, '2024-12-19 08:41:05', 4, '2024-12-19 12:33:09'),
 (20, 'Hawaii Tshirt', 'Size S, M, L, XL', 'f1.jpg', 2000.00, 100, 0, 0, 4, '2024-12-19 12:32:04', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `realcart`
+--
+
+CREATE TABLE `realcart` (
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `prod_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `size` enum('S','M','L','XL') DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -169,12 +217,35 @@ ALTER TABLE `cart`
   ADD KEY `fk_admin` (`stat_update_by`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `prod_id` (`prod_id`);
+
+--
 -- Indexes for table `productdetails`
 --
 ALTER TABLE `productdetails`
   ADD PRIMARY KEY (`prod_id`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `modified_by` (`modified_by`);
+
+--
+-- Indexes for table `realcart`
+--
+ALTER TABLE `realcart`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `prod_id` (`prod_id`);
 
 --
 -- Indexes for table `seller_credentials`
@@ -211,10 +282,28 @@ ALTER TABLE `cart`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `productdetails`
 --
 ALTER TABLE `productdetails`
   MODIFY `prod_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `realcart`
+--
+ALTER TABLE `realcart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `seller_credentials`
@@ -240,11 +329,31 @@ ALTER TABLE `cart`
   ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `user_credentials` (`id`);
 
 --
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_credentials` (`id`);
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`prod_id`) REFERENCES `productdetails` (`prod_id`);
+
+--
 -- Constraints for table `productdetails`
 --
 ALTER TABLE `productdetails`
   ADD CONSTRAINT `productdetails_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `seller_credentials` (`id`),
   ADD CONSTRAINT `productdetails_ibfk_2` FOREIGN KEY (`modified_by`) REFERENCES `seller_credentials` (`id`);
+
+--
+-- Constraints for table `realcart`
+--
+ALTER TABLE `realcart`
+  ADD CONSTRAINT `realcart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_credentials` (`id`),
+  ADD CONSTRAINT `realcart_ibfk_2` FOREIGN KEY (`prod_id`) REFERENCES `productdetails` (`prod_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
