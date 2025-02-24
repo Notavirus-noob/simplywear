@@ -25,6 +25,9 @@ if(isset($_SESSION['admin_id'])) {
         <?php endif; ?>
         <li><a href="index.php" class="<?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a></li>
         <li><a href="shop.php" class="<?php echo $current_page == 'shop.php' ? 'active' : ''; ?>">Shop</a></li>
+        <?php if(isset($user) && checkUserOrder($_SESSION['user_id'])== true){?>
+            <li><a href="user_Orders.php" class="<?php echo $current_page == 'about.php' ? 'active' : ''; ?>">Orders</a></li>
+        <?php    } ?>
         <?php if (!isset($seller)): ?>
         <li><a href="about.php" class="<?php echo $current_page == 'about.php' ? 'active' : ''; ?>">About</a></li>
         <?php if (!isset($user) && !isset($admin)) : ?>        <li><a href="seller_signuplogin.php" class="<?php echo $current_page == 'seller_signuplogin.php' ? 'active' : ''; ?>">Are you a seller?</a></li>
@@ -44,6 +47,8 @@ if(isset($_SESSION['admin_id'])) {
             <i class="bi bi-person"></i>
             </a>
         <?php endif; ?>
+
+       
         <a href="#" id="close"> <i class="bi bi-x"></i></a>
     </ul>              
 </div>

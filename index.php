@@ -63,7 +63,7 @@ $products = getAllProducts();
                         <img src="img/products/<?php echo $product['image']?>" alt="<?php $product['prodname'] ?>">
                         <div class="des">
                             <h5><?php echo $product['prodname'] ?></h5>
-                            <h4>Npr:<?php echo $product['price'] ?></h4>
+                            <h4>Rs: <?php echo $product['price'] ?></h4>
                         </div>
                         <a href="sproduct.php?id=<?php echo $product['prod_id'] ?>"><i class="bi bi-cart cart"></i></a>
                     </div>
@@ -89,7 +89,7 @@ $products = getAllProducts();
                         <img src="img/products/<?php echo $product['image']?>" alt="<?php $product['prodname'] ?>">
                         <div class="des">
                             <h5><?php echo $product['prodname'] ?></h5>
-                            <h4>Npr: <?php echo $product['price'] ?></h4>
+                            <h4>Rs: <?php echo $product['price'] ?></h4>
                         </div>
                         <a href="sproduct.php?id=<?php echo $product['prod_id'] ?>"><i class="bi bi-cart cart"></i></a>
                     </div>

@@ -111,13 +111,13 @@
             echo "Database error: " . $ex->getMessage();
         }
     }
-    function addToCart($product_name, $price, $size, $quantity,$image) {
+    function addToCart($product_id,$product_name, $price, $size, $quantity,$image) {
         try {
             $connection = mysqli_connect('localhost', 'root', '', 'bridge_courier');          
             $user_id = $_SESSION['user_id'];
-            $insertsql = "INSERT INTO cart(product_name, price, size, quantity, user_id,image) VALUES(?, ?, ?, ?, ?,?)";
+            $insertsql = "INSERT INTO realcart(prod_id,product_name, price, size, quantity, user_id,image) VALUES(?, ?, ?, ?, ?,?,?)";
             $stmt = $connection->prepare($insertsql);
-            $stmt->bind_param("sdsiis", $product_name, $price, $size, $quantity, $user_id,$image);
+            $stmt->bind_param("isdsiis",$product_id, $product_name, $price, $size, $quantity, $user_id,$image);
             $stmt->execute();
             
             if ($connection->insert_id > 0 && $connection->affected_rows == 1) {
@@ -271,7 +271,21 @@
     function getCartById($id){
         try {
             $connect = new mysqli( 'localhost','root','','bridge_courier');
-            $sql = "select * from cart where id=$id";
+            $sql = "select * from realcart where cart_id=$id";
+            $result = $connect->query($sql);
+            if ($result->num_rows == 1) {
+                $recordById= $result->fetch_assoc();
+                return $recordById;
+            }
+            return false;
+        } catch (\Throwable $th) {
+           die('Error: ' . $th->getMessage());
+        }
+    }
+    function getOrderById($id){
+        try {
+            $connect = new mysqli( 'localhost','root','','bridge_courier');
+            $sql = "select * from orders where order_id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
                 $recordById= $result->fetch_assoc();
@@ -301,7 +315,7 @@
     function deleteCart($del_id){
         try {
             $connect = new mysqli('localhost','root','','bridge_courier');
-            $sql = "delete from cart where id=$del_id";
+            $sql = "delete from realcart where cart_id=$del_id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
                 return true;
@@ -346,9 +360,9 @@
             $activeSellerQuery = "SELECT COUNT(*) as count FROM seller_credentials WHERE status = 'active'";
     
             // Query to get cart count for unique user_id
-            $pendingCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='pending'";
-            $approvedCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='approved'";
-            $rejectedCartQuery = "SELECT COUNT(DISTINCT user_id) as count FROM cart WHERE user_id != '' and order_status='rejected'";;
+            $pendingCartQuery = "SELECT COUNT(*) AS count FROM orders WHERE status = 'pending'";
+            $approvedCartQuery = "SELECT COUNT(*) as count FROM orders WHERE status='approved'";
+            $rejectedCartQuery = "SELECT COUNT(*) as count FROM orders WHERE status='rejected'";;
     
             // Execute all queries
             $userCount = $connect->query($userQuery)->fetch_assoc()['count'];
@@ -409,22 +423,96 @@
            die('Error: ' . $th->getMessage());
         }
     }
-    function getOrders(){
-        try {
-            $connect = new mysqli('localhost','root','','bridge_courier');
-            $sql = "select * from cart";
-            $result = $connect->query($sql);
-            $users = [];
-            if ($result->num_rows > 0) {
-                //fetch products
-                while ($record= $result->fetch_assoc()) {
-                    array_push($users,$record);
-                }
-            }
-            return $users;
-        } catch (\Throwable $th) {
-           die('Error: ' . $th->getMessage());
+    function getOrderanditems() {
+        $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+    
+        if ($connect->connect_error) {
+            error_log("Database connection failed: " . $connect->connect_error);
+            return false; // Or throw an exception
         }
+    
+        $sql = "SELECT
+                    o.user_id AS UserID,
+                    o.order_id AS ID,
+                    oi.product_name AS `product_name`,
+                    oi.price AS price,
+                    oi.size AS size,
+                    oi.quantity AS quantity,
+                    (oi.price * oi.quantity) AS subtotal,
+                    o.total_price AS total,
+                    o.status AS `Order Status`,
+                    o.created_at AS `Created At`
+                FROM
+                    orders o
+                JOIN
+                    order_items oi ON o.order_id = oi.order_id
+                ORDER BY
+                    o.created_at ASC";
+        $result = $connect->query($sql);
+    
+        if (!$result) {
+            error_log("Query execution failed: " . $connect->error);
+            $connect->close();
+            return false; // Or throw an exception
+        }
+    
+        $orders = [];
+        if ($result->num_rows > 0) {
+            while ($record = $result->fetch_assoc()) {
+                $orders[] = $record;
+            }
+        }
+    
+        $result->free_result();
+        $connect->close();
+    
+        return $orders;
+    }
+    function getOrderanditemsById($id) {
+        $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+    
+        if ($connect->connect_error) {
+            error_log("Database connection failed: " . $connect->connect_error);
+            return false; // Or throw an exception
+        }
+    
+        $sql = "SELECT
+                    o.user_id AS UserID,
+                    o.order_id AS ID,
+                    oi.product_name AS `product_name`,
+                    oi.price AS price,
+                    oi.size AS size,
+                    oi.quantity AS quantity,
+                    (oi.price * oi.quantity) AS subtotal,
+                    o.total_price AS total,
+                    o.status AS `Order Status`,
+                    o.created_at AS `Created At`
+                FROM
+                    orders o
+                JOIN
+                    order_items oi ON o.order_id = oi.order_id
+                WHERE  o.user_id = $id
+                ORDER BY
+                    o.created_at ASC";
+        $result = $connect->query($sql);
+    
+        if (!$result) {
+            error_log("Query execution failed: " . $connect->error);
+            $connect->close();
+            return false; // Or throw an exception
+        }
+    
+        $orders = [];
+        if ($result->num_rows > 0) {
+            while ($record = $result->fetch_assoc()) {
+                $orders[] = $record;
+            }
+        }
+    
+        $result->free_result();
+        $connect->close();
+    
+        return $orders;
     }
 
     function getSellerById($id){
@@ -500,7 +588,7 @@
     function getAllCart($id){
         try {
             $connect = new mysqli('localhost','root','','bridge_courier');
-            $sql = "select * from cart where user_id=$id";
+            $sql = "select * from realcart where user_id=$id";
             $result = $connect->query($sql);
             $cart = [];
             if ($result->num_rows > 0) {
@@ -554,4 +642,119 @@
         }
     }
     
-    ?>
+    function createOrder($user_id, $finalTotal) {
+        try {
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+    
+            if ($connect->connect_error) {
+                throw new Exception("Connection failed: " . $connect->connect_error);
+            }
+    
+            $sql = "INSERT INTO orders (user_id, total_price) VALUES (?, ?)"; // Added order_date for completeness
+            $stmt = $connect->prepare($sql);
+    
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $connect->error);
+            }
+    
+            $stmt->bind_param("id", $user_id, $finalTotal);
+    
+            if ($stmt->execute()) {
+                $order_id = $connect->insert_id; // Get the last inserted ID
+                $stmt->close();
+                $connect->close();
+                return $order_id; // Return the order ID
+            } else {
+                $stmt->close();
+                $connect->close();
+                return false; // Or throw an exception
+            }
+        } catch (Exception $e) {
+            error_log("Error in createOrder: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    function addOrderItem($order_id, $product_id, $product_name, $size, $price, $quantity){
+        try {
+            $connect = new mysqli('localhost','root','','bridge_courier');
+            $sql = "INSERT INTO order_items (order_id, prod_id, product_name, size, price, quantity) VALUES ($order_id, $product_id, '$product_name', '$size', $price, $quantity)";
+            $connect->query($sql);
+            if ($connect->affected_rows == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            die('Error: ' . $th->getMessage());
+        }
+    }
+
+    function checkUserOrder($user) {
+        try {
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+    
+            if ($connect->connect_error) {
+                throw new Exception("Database connection failed: " . $connect->connect_error);
+            }
+    
+            $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE user_id = ?";
+            $stmt = $connect->prepare($sql);
+    
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $connect->error);
+            }
+    
+            $stmt->bind_param("i", $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                if ($row['order_count'] > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+    
+        } catch (Exception $e) {
+            error_log("Error in checkUserOrder: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    
+    function updateOrderStatus($order_id, $status) {
+        try {
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
+
+            if ($connect->connect_error) {
+                throw new Exception("Connection failed: " . $connect->connect_error);
+            }
+
+            $sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+            $stmt = $connect->prepare($sql);
+
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $connect->error);
+            }
+
+            $stmt->bind_param("si", $status, $order_id);
+
+            if ($stmt->execute()) {
+                $stmt->close();
+                $connect->close();
+                return true;
+            } else {
+                $stmt->close();
+                $connect->close();
+                return false;
+            }
+        } catch (Exception $e) {
+            error_log("Error in updateOrderStatus: " . $e->getMessage());
+            return false;
+        }
+    }

@@ -8,9 +8,11 @@
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         $product = getProductById( $_GET['id']);
     }
+
   
     $err= [];
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['id'])) {
+        $product_id= $_GET['id'];
         $product_name = $_POST['prodname'];
         $price = $_POST['price'];
         $image = $_POST['image'];  
@@ -27,7 +29,7 @@
         $image = $_POST['image'];
         if(count($err) == 0){ 
             if(isset($_SESSION['user_id'])) {
-                if (addToCart($product_name, $price, $size, $quantity, $image)) {
+                if (addToCart($product_id,$product_name, $price, $size, $quantity, $image)) {
                      $err['success'] = 'Added to Cart';   
                  } else {
                  $err['failed'] = 'Failed to add to Cart';
@@ -103,7 +105,7 @@
                         <img src="img/products/<?php echo $product['image']?>" alt="<?php $product['prodname'] ?>" >
                         <div class="des">
                             <h5><?php echo $product['prodname'] ?></h5>
-                            <h4>Npr: <?php echo $product['price'] ?></h4>
+                            <h4>Rs: <?php echo $product['price'] ?></h4>
                         </div>
                         <a href="shop.php"><i class="bi bi-cart cart"></i></a>
                     </div>
