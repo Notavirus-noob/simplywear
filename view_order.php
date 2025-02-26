@@ -14,21 +14,28 @@ $groupedOrders = [];
 foreach ($orders as $order) {
     $groupedOrders[$order['Created At']][] = $order;
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['updateID'])) {
-    if (isset($_GET['updateID']) && is_numeric($_GET['updateID'])) {
-        if (getOrderById($_GET['updateID'])) {
-            if (updateOrderStatus($_GET['updateID'], $_POST['status'])) {
-                $err['success'] = 'Order Status updated successfully';
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateID'])) {
+    $order_id = $_POST['updateID']; // Get order ID from POST
+    $status = $_POST['status'];
+
+    if (is_numeric($order_id)) {
+        if (getOrderById($order_id)) {
+            if (updateOrderStatus($order_id, $status)) {
+                $_SESSION['success_message'] = 'Order status updated successfully';
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
             } else {
-                $err['failed'] = 'Order update Failed';
+                $_SESSION['error_message'] = 'Order update failed';
             }
         } else {
-            $err['failed'] = 'Order not found';
+            $_SESSION['error_message'] = 'Order not found';
         }
     } else {
-        $err['failed'] = 'Invalid Order ID';
+        $_SESSION['error_message'] = 'Invalid Order ID';
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,30 +117,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['updateID'])) {
                         <?php if ($index === 0) : ?>
                             <td rowspan="<?= $rowCount ?>" class="align-middle text-center"><strong>Rs: <?= number_format($order['total'], 2) ?></strong></td>
                             <td rowspan="<?= $rowCount ?>" class="align-middle text-center">
-                            <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>?updateID=<?= $order['ID'] ?>">
+                            <form method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                                <input type="hidden" name="updateID" value="<?= $order['ID'] ?>">
                                 <input type="hidden" name="user_id" value="<?= $order['UserID'] ?>">
-                                <select name="status" class="form-select" value="<?= $orderStatus; ?>">
-                                    <?php if ($orderStatus == 'pending'): ?>
-                                        <option value="pending" selected>pending</option>
-                                        <option value="approved">Approve</option>
-                                        <option value="rejected">Rejected</option>
-                                    <?php elseif ($orderStatus == 'approved'): ?>
-                                        <option value="approved" selected>Approved</option>
-                                        <option value="shipped">Shipped</option>
-                                        <option value="delivered">Delivered</option>
-                                    <?php elseif ($orderStatus == 'shipped'): ?>
-                                        <option value="shipped" selected>Shipped</option>
-                                        <option value="delivered">Delivered</option>
-                                    <?php elseif ($orderStatus == 'delivered'): ?>
-                                        <option value="delivered" selected>Delivered</option>
-                                    <?php elseif ($orderStatus == 'cancelled'): ?>
-                                    <?php else: ?>
-                                        <option value="pending">Pending</option>
-                                    <?php endif; ?>
+                                <select name="status" class="form-select">
+                                    <option value="pending" <?= ($orderStatus == 'pending') ? 'selected' : '' ?>>Pending</option>
+                                    <option value="approved" <?= ($orderStatus == 'approved') ? 'selected' : '' ?>>Approved</option>
+                                    <option value="shipped" <?= ($orderStatus == 'shipped') ? 'selected' : '' ?>>Shipped</option>
+                                    <option value="delivered" <?= ($orderStatus == 'delivered') ? 'selected' : '' ?>>Delivered</option>
+                                    <option value="cancelled" <?= ($orderStatus == 'cancelled') ? 'selected' : '' ?>>Cancelled</option>
+                                    <option value="rejected" <?= ($orderStatus == 'rejected') ? 'selected' : '' ?>>Rejected</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary btn-sm mt-1" onclick="return confirm('do you want to update this order?');">Update</button>
+                                <button type="submit" class="btn btn-primary btn-sm mt-1" onclick="return confirm('Do you want to update this order?');">Update</button>
                             </form>
-                            </td>
+                        </td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>

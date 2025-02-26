@@ -33,7 +33,7 @@
             mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     
             // Connect to the database
-            $connection = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+            $connection = new mysqli('localhost', 'root', '', 'bridge_courier');
     
             // Escape user input to prevent SQL Injection
             $username = $connection->real_escape_string($username);
@@ -69,7 +69,7 @@
     
     function addSeller($username,$address,$email,$mobile_no,$pwd){
         try{
-            $connection = mysqli_connect('localhost','root','','simply_wear_Fashion');
+            $connection = mysqli_connect('localhost','root','','bridge_courier');
             $insertsql = "INSERT INTO seller_credentials(username,address, email,phone_number, password) VALUES('$username','$address', '$email' ,$mobile_no, '$pwd')";
             mysqli_query($connection,$insertsql);
             if ($connection->insert_id > 0 && $connection->affected_rows == 1) {
@@ -97,7 +97,7 @@
             if(session_status()== PHP_SESSION_NONE){
                 session_start();
             }
-            $connection = mysqli_connect('localhost','root','','simply_wear_Fashion');          
+            $connection = mysqli_connect('localhost','root','','bridge_courier');          
             $created_by= $_SESSION['seller_id'];
             $cdate = date('Y-m-d H:i:s');
             $insertsql = "INSERT INTO productdetails(prodname,prod_desc, image,price, quantity,f_stat,na_stat,created_by,created_at) VALUES('$product_name','$proddesc','$image',$price,$quantity,$f_stat,$na_stat,$created_by,'$cdate')";
@@ -113,9 +113,9 @@
     }
     function addToCart($product_id,$product_name, $price, $size, $quantity,$image) {
         try {
-            $connection = mysqli_connect('localhost', 'root', '', 'simply_wear_Fashion');          
+            $connection = mysqli_connect('localhost', 'root', '', 'bridge_courier');          
             $user_id = $_SESSION['user_id'];
-            $insertsql = "INSERT INTO cart(prod_id,product_name, price, size, quantity, user_id,image) VALUES(?, ?, ?, ?, ?,?,?)";
+            $insertsql = "INSERT INTO realcart(prod_id,product_name, price, size, quantity, user_id,image) VALUES(?, ?, ?, ?, ?,?,?)";
             $stmt = $connection->prepare($insertsql);
             $stmt->bind_param("isdsiis",$product_id, $product_name, $price, $size, $quantity, $user_id,$image);
             $stmt->execute();
@@ -131,7 +131,7 @@
     }    
     function checkData($email_login,$pwd_login,$form_origin){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             //select query
             if($form_origin=='user_form'){
                 $sql = sprintf(
@@ -208,7 +208,7 @@
     }
     function getAllProducts(){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from productdetails";
             $result = $connect->query($sql);
             $products = [];
@@ -227,7 +227,7 @@
     
     function getProductById($id){
         try {
-            $connect = new mysqli( 'localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli( 'localhost','root','','bridge_courier');
             $sql = "select * from productdetails where prod_id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
@@ -242,7 +242,7 @@
     function getProductsBySellerId($seller_id){
         try {
             // Connect to the database
-            $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
             
             // SQL query to fetch products created or modified by the seller
             $sql = "SELECT * FROM productdetails WHERE created_by = $seller_id OR modified_by = $seller_id";
@@ -270,22 +270,8 @@
     
     function getCartById($id){
         try {
-            $connect = new mysqli( 'localhost','root','','simply_wear_Fashion');
-            $sql = "select * from cart where cart_id=$id";
-            $result = $connect->query($sql);
-            if ($result->num_rows == 1) {
-                $recordById= $result->fetch_assoc();
-                return $recordById;
-            }
-            return false;
-        } catch (\Throwable $th) {
-           die('Error: ' . $th->getMessage());
-        }
-    }
-    function getOrderById($id){
-        try {
-            $connect = new mysqli( 'localhost','root','','simply_wear_Fashion');
-            $sql = "select * from orders where order_id=$id";
+            $connect = new mysqli( 'localhost','root','','bridge_courier');
+            $sql = "select * from realcart where cart_id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
                 $recordById= $result->fetch_assoc();
@@ -300,7 +286,7 @@
     
     function deleteProduct($del_id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "delete from productdetails where prod_id=$del_id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
@@ -314,8 +300,8 @@
     }
     function deleteCart($del_id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
-            $sql = "delete from cart where cart_id=$del_id";
+            $connect = new mysqli('localhost','root','','bridge_courier');
+            $sql = "delete from realcart where cart_id=$del_id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
                 return true;
@@ -332,7 +318,7 @@
             if(session_status()==PHP_SESSION_NONE) {
                 session_start();
             }
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $cdate = date('Y-m-d H:i:s');
             $modified_by= $_SESSION['seller_id'];
             $sql = "update productdetails set prodname='$product_name', prod_desc='$proddesc', price=$price, quantity=$quantity, image='$image', f_stat=$f_stat, na_stat=$na_stat, modified_by=$modified_by, modified_at='$cdate' where prod_id=$edtid";           
@@ -351,7 +337,7 @@
 
     function getCount(){
         try {
-            $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
             
             // Queries for user, seller, and cart counts
             $userQuery = "SELECT COUNT(*) as count FROM user_credentials";
@@ -390,7 +376,7 @@
   
     function getSellers(){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from seller_credentials";
             $result = $connect->query($sql);
             $sellers = [];
@@ -408,7 +394,7 @@
 
     function getUsers(){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from user_credentials";
             $result = $connect->query($sql);
             $users = [];
@@ -424,7 +410,7 @@
         }
     }
     function getOrderanditems() {
-        $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+        $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
     
         if ($connect->connect_error) {
             error_log("Database connection failed: " . $connect->connect_error);
@@ -446,52 +432,6 @@
                     orders o
                 JOIN
                     order_items oi ON o.order_id = oi.order_id
-                ORDER BY
-                    o.created_at ASC";
-        $result = $connect->query($sql);
-    
-        if (!$result) {
-            error_log("Query execution failed: " . $connect->error);
-            $connect->close();
-            return false; // Or throw an exception
-        }
-    
-        $orders = [];
-        if ($result->num_rows > 0) {
-            while ($record = $result->fetch_assoc()) {
-                $orders[] = $record;
-            }
-        }
-    
-        $result->free_result();
-        $connect->close();
-    
-        return $orders;
-    }
-    function getOrderanditemsById($id) {
-        $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
-    
-        if ($connect->connect_error) {
-            error_log("Database connection failed: " . $connect->connect_error);
-            return false; // Or throw an exception
-        }
-    
-        $sql = "SELECT
-                    o.user_id AS UserID,
-                    o.order_id AS ID,
-                    oi.product_name AS `product_name`,
-                    oi.price AS price,
-                    oi.size AS size,
-                    oi.quantity AS quantity,
-                    (oi.price * oi.quantity) AS subtotal,
-                    o.total_price AS total,
-                    o.status AS `Order Status`,
-                    o.created_at AS `Created At`
-                FROM
-                    orders o
-                JOIN
-                    order_items oi ON o.order_id = oi.order_id
-                WHERE  o.user_id = $id
                 ORDER BY
                     o.created_at ASC";
         $result = $connect->query($sql);
@@ -517,7 +457,7 @@
 
     function getSellerById($id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from seller_credentials where id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
@@ -531,7 +471,7 @@
     }
     function getUserById($id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from user_credentials where id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
@@ -545,7 +485,7 @@
     }
     function deleteSeller($del_id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "delete from seller_credentials where seller_id=$del_id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
@@ -559,7 +499,7 @@
     }
     function deleteUser($del_id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "delete from user_credentials where id=$del_id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
@@ -573,7 +513,7 @@
     }
    function getAdminById($id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "select * from admin where admin_id=$id";
             $result = $connect->query($sql);
             if ($result->num_rows == 1) {
@@ -587,8 +527,8 @@
     }
     function getAllCart($id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
-            $sql = "select * from cart where user_id=$id";
+            $connect = new mysqli('localhost','root','','bridge_courier');
+            $sql = "select * from realcart where user_id=$id";
             $result = $connect->query($sql);
             $cart = [];
             if ($result->num_rows > 0) {
@@ -604,7 +544,7 @@
     }
     function updateUserAddress($userAddress,$id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "UPDATE user_credentials SET address='$userAddress' WHERE id=$id";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
@@ -619,7 +559,7 @@
     
     function getAddressByUserId($id){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
     
             if ($connect->connect_error) {
                 throw new Exception('Connection failed: ' . $connect->connect_error);
@@ -644,7 +584,7 @@
     
     function createOrder($user_id, $finalTotal) {
         try {
-            $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+            $connect = new mysqli('localhost', 'root', '', 'bridge_courier');
     
             if ($connect->connect_error) {
                 throw new Exception("Connection failed: " . $connect->connect_error);
@@ -677,7 +617,7 @@
 
     function addOrderItem($order_id, $product_id, $product_name, $size, $price, $quantity){
         try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
+            $connect = new mysqli('localhost','root','','bridge_courier');
             $sql = "INSERT INTO order_items (order_id, prod_id, product_name, size, price, quantity) VALUES ($order_id, $product_id, '$product_name', '$size', $price, $quantity)";
             $connect->query($sql);
             if ($connect->affected_rows == 1) {
@@ -689,90 +629,4 @@
             die('Error: ' . $th->getMessage());
         }
     }
-
-    function checkUserOrder($user) {
-        try {
-            $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
-    
-            if ($connect->connect_error) {
-                throw new Exception("Database connection failed: " . $connect->connect_error);
-            }
-    
-            $sql = "SELECT COUNT(*) AS order_count FROM orders WHERE user_id = ?";
-            $stmt = $connect->prepare($sql);
-    
-            if (!$stmt) {
-                throw new Exception("Prepare failed: " . $connect->error);
-            }
-    
-            $stmt->bind_param("i", $user);
-            $stmt->execute();
-            $result = $stmt->get_result();
-    
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                if ($row['order_count'] > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-    
-        } catch (Exception $e) {
-            error_log("Error in checkUserOrder: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    function updateOrderStatus($order_id, $status) {
-        try {
-            if (session_status() !== PHP_SESSION_ACTIVE) {
-                session_start();
-            }
-    
-            if (!isset($_SESSION['admin_id'])) {
-                throw new Exception("Admin ID is not set in session.");
-            }
-    
-            $admin_id = $_SESSION['admin_id'];
-            $cdate = date('Y-m-d H:i:s');
-    
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    
-            $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
-    
-            $sql = "UPDATE orders SET status = ?, modified_by = ?, modified_at = ? WHERE order_id = ?";
-            $stmt = $connect->prepare($sql);
-    
-            if (!$stmt) {
-                throw new Exception("Prepare failed: " . $connect->error);
-            }
-    
-            $stmt->bind_param("sisi", $status, $admin_id, $cdate, $order_id);
-    
-            if (!$stmt->execute()) {
-                throw new Exception("Execute failed: " . $stmt->error);
-            }
-    
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("No rows updated. Check if the order ID exists.");
-            }
-    
-            return true;
-        } catch (Exception $e) {
-            error_log("Error in updateOrderStatus: " . $e->getMessage());
-            echo "Error: " . $e->getMessage(); // Show error message
-            return false;
-        } finally {
-            if (isset($stmt) && $stmt instanceof mysqli_stmt) {
-                $stmt->close();
-            }
-            if (isset($connect) && $connect instanceof mysqli) {
-                $connect->close();
-            }
-        }
-    }
-    
-    
+    ?>

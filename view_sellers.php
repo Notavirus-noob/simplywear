@@ -33,7 +33,7 @@ $result = getSellers();
                     <th class="table-header">UserName</th>
                     <th class="table-header">Email</th>
                     <th class="table-header">Phone Number</th>
-                    <th class="table-header">Password</th>
+                 
                     <th class="table-header">Status</th>
                     <th class="table-header">Actions</th>
                 </tr>
@@ -49,7 +49,7 @@ $result = getSellers();
                         echo "<td class='table-cell'>" . $row['username'] . "</td>";
                         echo "<td class='table-cell'>" . $row['email'] . "</td>";
                         echo "<td class='table-cell'>" . $row['phone_number'] . "</td>";
-                        echo "<td class='table-cell'>" . $row['password'] . "</td>";
+                        
                         echo "<td class='table-cell status'>" . $row['status'] . "</td>";
                         echo "<td class='table-cell'>";
                         // If the seller is pending, allow admin to approve or delete
@@ -61,7 +61,7 @@ $result = getSellers();
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7' class='no-results'>No sellers found</td></tr>";
+                    echo "<tr><td colspan='6' class='no-results'>No sellers found</td></tr>";
                 }
                 ?>
             </tbody>

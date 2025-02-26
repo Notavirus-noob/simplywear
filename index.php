@@ -98,36 +98,6 @@ $products = getAllProducts();
         </div>
     </section>
 
-    <section id="sm-banner" class="section_p1">
-        <div class="banner-box">
-            <h4>crazy deals</h4>
-            <h2>Buy 1 get 1 free</h2>
-            <span>The best classic dress is on the sale at cara</span>
-            <button class="white">Learn More</button>
-        </div>
-        <div class="banner-box banner-box2">
-            <h4>Spring/Summer </h4>
-            <h2>Upcoming Season</h2>
-            <span>The best classic dress is on the sale at cara</span>
-            <button class="white">Collection
-            </button>
-        </div>
-    </section>
-
-    <section id="banner3">
-        <div class="banner-box">
-            <h2>Seasononal sale</h2>
-            <h3>Winter Collection -50% OFF</h3>
-        </div>
-        <div class="banner-box banner-box2">
-            <h2>New Footwear Collection</h2>
-            <h3>Spring/Summer 2024</h3>
-        </div>
-        <div class="banner-box banner-box3">
-            <h2>T-Shirts</h2>
-            <h3>New Trendy Styles</h3>
-        </div>
-    </section>
     <?php require "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>

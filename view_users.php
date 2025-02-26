@@ -48,7 +48,6 @@ $result = getUsers(); // A function to get all users from the database
                     <th class="table-header">UserName</th>
                     <th class="table-header">Email</th>
                     <th class="table-header">Phone Number</th>
-                    <th class="table-header">Password</th>
                     <th class="table-header">Address</th>
                     <th class="table-header">Actions</th>
                 </tr>
@@ -64,7 +63,6 @@ $result = getUsers(); // A function to get all users from the database
                         echo "<td class='table-cell'>" . $row['username'] . "</td>";
                         echo "<td class='table-cell'>" . $row['email'] . "</td>";
                         echo "<td class='table-cell'>" . $row['mobile'] . "</td>";
-                        echo "<td class='table-cell'>" . $row['password'] . "</td>";
                         echo "<td class='table-cell'>" . $row['Address'] . "</td>";
                         echo "<td class='table-cell'>";
                         echo "<a href='view_users.php?delid=" . $row['id'] . "' class='action-link' onclick='return confirm(\"Are you sure you want to delete this user?\")'>Delete</a>";
