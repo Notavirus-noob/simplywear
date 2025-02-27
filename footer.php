@@ -10,20 +10,14 @@
         <div class="col">
             <h4>About</h4>
             <a href="about.php">About us</a>
-            <a href="#">Delivery Information</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms and Conditions</a>
-            <a href="#">Contact Us</a>
         </div>
         <div class="col">
             <h4>My Account</h4>
             <a href="user_signuplogin.php">Sign In</a>
             <a href="cart.php">View Cart</a>
-            <a href="#">Track My Order</a>
-            <a href="#">Help</a>
         </div>
 
         <div class="copyright">
-            <p>&copy; 2024 developed by BridgeCourier. </p> 
+            <p>&copy; 2024 developed by SimplyWear Fashion. </p> 
         </div>
     </footer>

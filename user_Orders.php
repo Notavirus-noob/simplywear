@@ -55,7 +55,6 @@ foreach ($orders as $order) {
                 <th class="text-center">Subtotal</th>
                 <th class="text-center">Total</th>
                 <th class="text-center">Order Status</th>
-                <th class="text-center">Track Order</th>
             </tr>
         </thead>
         <tbody>
@@ -81,13 +80,6 @@ foreach ($orders as $order) {
                         <?php if ($index === 0) : ?>
                             <td rowspan="<?= $rowCount ?>" class="align-middle text-center"><strong>Rs: <?= number_format($order['total'], 2) ?></strong></td>
                             <td rowspan="<?= $rowCount ?>" class="align-middle text-center"><?=$order['Order Status'] ?></td>
-                            <td rowspan="<?= $rowCount ?>" class="align-middle text-center">
-                            <?php if ($order['Order Status'] == 'shipped' || $order['Order Status'] == 'approved'|| $order['Order Status'] == 'delivered'): ?>
-                                    <a href="track_order_details.php?order_id=<?php echo $order['order_id']; ?>" class="btn btn-primary btn-sm">Track</a>
-                            <?php else: ?>
-                                    <span class="text-muted">Tracking not available</span>
-                            <?php endif; ?>
-                            </td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
