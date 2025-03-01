@@ -89,7 +89,6 @@
     }
     if (isset($_GET['edtid']) && is_numeric($_GET['edtid'])) {
         $product = getProductById($_GET['edtid']);
-        print_r($product);
         if (!$product) {
             die('Category not found');
         }
@@ -129,30 +128,30 @@
                             <?php if($product['f_stat'] == 0){ ?>
                                 <input type="radio" name="f_stat" value="0" checked><span>Don't add</span>
                                 <input type="radio" name="f_stat" value="1"><span>Add</span>
-                                <?php }else{ ?>
-                                    <input type="radio" name="f_stat" value="0"><span>Don't add</span>
-                                    <input type="radio" name="f_stat" value="1"checked><span>Add</span>
-                                    <?php } ?>
+                            <?php }else{ ?>
+                                <input type="radio" name="f_stat" value="0"><span>Don't add</span>
+                                <input type="radio" name="f_stat" value="1"checked><span>Add</span>
+                            <?php } ?>
                         </div>
                         <div id="New_arrival">
-                                    <span for="na_stat" id="na_name" value="<?php echo $product['na_stat'] ; ?>">New Arrival</span>
-                                    <?php if($product['na_stat'] == 0){ ?>
-                                        <input type="radio" name="na_stat" value="0" checked><span>Don't add</span>
-                                        <input type="radio" name="na_stat" value="1"><span>Add</span>
-                                        <?php }else{ ?>
-                                            <input type="radio" name="na_stat" value="0"><span>Don't add</span>
-                                            <input type="radio" name="na_stat" value="1" checked><span>Add</span>
-                                            <?php } ?>
+                            <span for="na_stat" id="na_name" value="<?php echo $product['na_stat'] ; ?>">New Arrival</span>
+                            <?php if($product['na_stat'] == 0){ ?>
+                            <input type="radio" name="na_stat" value="0" checked><span>Don't add</span>
+                            <input type="radio" name="na_stat" value="1"><span>Add</span>
+                            <?php }else{ ?>
+                                <input type="radio" name="na_stat" value="0"><span>Don't add</span>
+                                <input type="radio" name="na_stat" value="1" checked><span>Add</span>
+                            <?php } ?>
                         </div>
                         <div id="image_div">
-                                            <span for="image" id="img_name">Image</span>
-                                            <img src="img/products/<?php echo $product['image'] ?>" alt="product image" width="50px" height="50px" id="img"><br/>
-                                            <input type="file" name="image_n" id="image_new" >
-                                            <input type="hidden" name="image_o" value="<?php echo $product['image'] ; ?>" id="image_old">
+                            <span for="image" id="img_name">Image</span>
+                            <img src="img/products/<?php echo $product['image'] ?>" alt="product image" width="50px" height="50px" id="img"><br/>
+                            <input type="file" name="image_n" id="image_new" >
+                            <input type="hidden" name="image_o" value="<?php echo $product['image'] ; ?>" id="image_old">
                         </div>
                                         <?php  echo displayErrorMessage($err,'image')?>
 
-						<button type="submit" name="editProduct">Edit Product</button>
+						<button type="submit" name="editProduct" onclick="return confirm('Do you want to edit?')">Edit Product</button>
                         <div class="msg">
                             <?php  echo displaySuccessMessage($err,'success')?>
                             <?php  echo displayErrorMessage($err,'failed')?>

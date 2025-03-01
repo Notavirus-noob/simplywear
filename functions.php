@@ -298,20 +298,40 @@
     }
     
     
-    function deleteProduct($del_id){
-        try {
-            $connect = new mysqli('localhost','root','','simply_wear_Fashion');
-            $sql = "delete from productdetails where prod_id=$del_id";
-            $connect->query($sql);
-            if ($connect->affected_rows == 1) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\Throwable $th) {
-           die('Error: ' . $th->getMessage());
+   function deleteProduct($del_id) {
+    try {
+        $connect = new mysqli('localhost', 'root', '', 'simply_wear_Fashion');
+        if ($connect->connect_error) {
+            die('Connection failed: ' . $connect->connect_error);
         }
+
+        // Check if the product has existing orders
+        $orderCheckQuery = "SELECT COUNT(*) as order_count FROM order_items WHERE prod_id = ?";
+        $stmt = $connect->prepare($orderCheckQuery);
+        $stmt->bind_param("i", $del_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        
+        if ($result['order_count'] > 0) {
+            return 'Product cannot be deleted as there are existing orders associated with it.';
+        }
+
+        // Proceed with deletion if no orders exist
+        $sql = "DELETE FROM productdetails WHERE prod_id = ?";
+        $stmt = $connect->prepare($sql);
+        $stmt->bind_param("i", $del_id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (Exception $e) {
+        die('Error: ' . $e->getMessage());
     }
+}
+
     function deleteCart($del_id){
         try {
             $connect = new mysqli('localhost','root','','simply_wear_Fashion');

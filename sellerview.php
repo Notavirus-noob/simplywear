@@ -10,16 +10,23 @@ if(!isset($_SESSION['seller_id'])) {
   }
 $err=[];
 if (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
-    if (getProductById($_GET['delid'])) {
-        if(deleteProduct($_GET['delid'])){
-            $err['prod_s'] =  'Product deleted success';
+    $product = getProductById($_GET['delid']);
+    
+    if ($product) {
+        $deleteResult = deleteProduct($_GET['delid']);
+        
+        if ($deleteResult === true) {
+            $err['prod_s'] = 'Product deleted successfully.';
+        } elseif (is_string($deleteResult)) {
+            $err['prod_f'] = $deleteResult; // Error message from deleteProduct function
         } else {
-            $err['prod_f'] = 'product delete Failed';
+            $err['prod_f'] = 'Product deletion failed.';
         }
     } else {
-        $err['prod_f'] = 'product not found';
+        $err['prod_f'] = 'Product not found.';
     }
 }
+
 
 $products=getProductsBySellerId($_SESSION['seller_id']);
 
