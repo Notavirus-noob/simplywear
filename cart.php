@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id']) && !empt
                 }
                 deleteCart($cart_ids[$i]);
             }
-            $_SESSION['order_success_message'] = "Your order (ID: $order_id) has been sent for approval.";
+            $_SESSION['order_success_message'] = "Your order has been sent for approval.";
             header("Location: " . $_SERVER['PHP_SELF']);
             exit;
         } else {

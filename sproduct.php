@@ -70,7 +70,7 @@
         <div class="single-pro-details">
                 <h4 name="prodname"><?php echo $product['prodname'] ?></h4>
                 <input type="hidden" name="prodname" value="<?php echo $product['prodname'] ?>">
-                <h2 name="price">Npr:<?php echo $product['price'] ?></h2>
+                <h2 name="price">Rs:<?php echo $product['price'] ?></h2>
                 <input type="hidden" name="price" value="<?php echo $product['price'] ?>">
                 <select name="size">
                     <option value="">Select Size</option>

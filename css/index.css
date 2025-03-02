@@ -100,7 +100,8 @@
 }
 #product1 .pro-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
+  gap: 15px;
   padding: 20px;
   flex-wrap: wrap;
 }

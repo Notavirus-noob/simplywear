@@ -126,7 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	<div class="container">
 		<div class="main">  	
 			<input type="checkbox" id="chk" aria-hidden="true">
-
 				<div class="signup">
 					<form method="post" action="<?php $_SERVER['PHP_SELF'] ?>" id="signup">
 						<label for="chk" aria-hidden="true">Seller Sign up</label>

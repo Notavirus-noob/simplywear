@@ -36,7 +36,18 @@
         } else {
             $err['email'] = 'Enter email';
         }
-
+        if (checkRequiredField('address')) {
+        
+            if (matchPattern($_POST['address'],"/^[A-Za-z\s'-]+$/")){
+                $address = $_POST['address'];
+            }
+            else{
+                $err['address'] = 'Enter Valid address';    
+            }
+            
+        } else {
+            $err['address'] = 'Enter address';
+        }
         if (checkRequiredField('mobile_no')) {
         
             if (matchPattern($_POST['mobile_no'],"/^(97|98|96)\d{8}$/")){
@@ -67,7 +78,7 @@
         if (count($err) == 0) {
             try {
                 // Attempt to add the user details to the database
-                $result = addUser($username, $email, $mobile_no, $pwd);
+                $result = addUser($username, $email,$address, $mobile_no, $pwd);
         
                 if ($result === true) {
                     // Success message
@@ -137,6 +148,8 @@
 						<?php  echo displayErrorMessage($err,'username')?>
 						<input type="email" name="email" id="email" placeholder="Email">
 						<?php  echo displayErrorMessage($err,'email')?>
+                        <input type="text" name="address" id="address" placeholder="Address">
+						<?php  echo displayErrorMessage($err,'address')?>
 						<input type="number" name="mobile no" id="mobile_no" placeholder="mobile no">
 						<?php  echo displayErrorMessage($err,'mobile_no')?>
 						<input type="password" name="pwd" id="pwd" placeholder="Password">

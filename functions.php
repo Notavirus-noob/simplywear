@@ -27,7 +27,7 @@
         return false;
     }
 
-    function addUser($username, $email, $mobile_no, $pwd) {
+    function addUser($username, $email, $address, $mobile_no, $pwd) {
         try {
             // Enable error reporting for MySQLi
             mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -41,8 +41,8 @@
             $mobile_no = $connection->real_escape_string($mobile_no);
     
             // Construct the SQL query
-            $insertsql = "INSERT INTO user_credentials (username, email, mobile, password) 
-                          VALUES ('$username', '$email', '$mobile_no', '$pwd')";
+            $insertsql = "INSERT INTO user_credentials (username, email, mobile, password,Address) 
+                          VALUES ('$username', '$email', '$mobile_no', '$pwd','$address')";
     
             // Execute the query
             if ($connection->query($insertsql) === TRUE) {
